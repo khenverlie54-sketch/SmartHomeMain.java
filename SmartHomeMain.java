@@ -4,25 +4,25 @@ public class SmartHomeMain {
         Thermostat thermo1 = new Thermostat("Kitchen Thermostat", "ON", "Hallway", 24.5, "Cooling");
         Thermostat thermo2 = new Thermostat("Bedroom Thermostat", "OFF", "Bedroom", 34.0, "Heating");
 
-        Device[] devices = {bulb1, thermo1, thermo2};
+        Device[] devices = { bulb1, thermo1, thermo2 };
 
         System.out.println("\n_______________________________________");
-        System.out.println("\n       Initial Device Status        ");
+        System.out.println("       Initial Device Status        ");
         System.out.println("_______________________________________");
         for (Device d : devices) d.displayInfo();
         Device.showDeviceCount();
 
-        SmartHomeController controller = new SmartHomeController(bulb1, thermo1, thermo2);
+        SmartHomeController controller = new SmartHomeController(devices);
 
         controller.turnAllOff();
         System.out.println("\n_______________________________________");
-        System.out.println("\n    Device Status After Turning OFF    ");
+        System.out.println("    Device Status After Turning OFF    ");
         System.out.println("_______________________________________");
         for (Device d : devices) d.displayInfo();
 
         controller.turnAllOn();
         System.out.println("\n_______________________________________");
-        System.out.println("\n    Device Status After Turning ON     ");
+        System.out.println("    Device Status After Turning ON     ");
         System.out.println("_______________________________________");
         for (Device d : devices) d.displayInfo();
     }
@@ -43,7 +43,12 @@ class Device {
 
     public Device(String deviceName, String status, String location) {
         this.deviceName = deviceName;
-        this.status = (status.equalsIgnoreCase("ON") || status.equalsIgnoreCase("OFF")) ? status.toUpperCase() : "OFF";
+      
+        if (status.equalsIgnoreCase("ON") || status.equalsIgnoreCase("OFF")) {
+            this.status = status.toUpperCase();
+        } else {
+            this.status = "OFF";
+        }
         this.location = location;
         deviceCount++;
     }
@@ -72,16 +77,21 @@ class LightBulb extends Device {
         this.color = color;
     }
 
+    
     public LightBulb(String deviceName, String location) {
         super(deviceName, "OFF", location);
-        this.brightnessLevel = 50;
-        this.color = "Warm White";
+        this.brightnessLevel = 80;  
+        this.color = "Bright";    
     }
 
     public void adjustBrightness(int level) {
-        if (level >= 0 && level <= 100) {
+        if (level >= 0 && level <= 100) {  
             brightnessLevel = level;
-            if (level == 0) color = "No Light";
+            if (level == 0) {
+                color = "No Light";
+            }
+        } else {
+            System.out.println("Invalid brightness level (0–100 only).");
         }
     }
 
@@ -95,8 +105,8 @@ class LightBulb extends Device {
     @Override
     public void turnOn() {
         super.turnOn();
-        brightnessLevel = 50;      
-        color = "Warm White";      
+        brightnessLevel = 50;
+        color = "Warm White";
     }
 
     @Override
@@ -110,16 +120,16 @@ class LightBulb extends Device {
 class Thermostat extends Device {
     private double temperature;
     private String mode;
-    private double savedTemp;
 
     public Thermostat(String deviceName, String status, String location, double temperature, String mode) {
         super(deviceName, status, location);
         this.temperature = temperature;
         this.mode = mode;
-        this.savedTemp = temperature;
     }
 
-    public void setTemperature(double temp) { this.temperature = temp; }
+    public void setTemperature(double temp) {
+        this.temperature = temp;
+    }
 
     public void setTemperature(double temp, String mode) {
         this.temperature = temp;
@@ -129,14 +139,13 @@ class Thermostat extends Device {
     @Override
     public void turnOff() {
         super.turnOff();
-        savedTemp = temperature;
         temperature = 0;
     }
 
     @Override
     public void turnOn() {
         super.turnOn();
-        temperature = savedTemp;
+        if (temperature == 0) temperature = 22.0; 
     }
 
     @Override
@@ -152,27 +161,19 @@ class Thermostat extends Device {
 }
 
 class SmartHomeController {
-    LightBulb bulb;
-    Thermostat thermo1;
-    Thermostat thermo2;
+    private Device[] devices;
 
-    public SmartHomeController(LightBulb bulb, Thermostat thermo1, Thermostat thermo2) {
-        this.bulb = bulb;
-        this.thermo1 = thermo1;
-        this.thermo2 = thermo2;
+    public SmartHomeController(Device[] devices) {
+        this.devices = devices;
     }
 
     public void turnAllOn() {
-        bulb.turnOn();
-        thermo1.turnOn();
-        thermo2.turnOn();
+        for (Device d : devices) d.turnOn();
         System.out.println("\nAll devices turned ON.");
     }
 
     public void turnAllOff() {
-        bulb.turnOff();
-        thermo1.turnOff();
-        thermo2.turnOff();
+        for (Device d : devices) d.turnOff();
         System.out.println("\nAll devices turned OFF.");
     }
 }
