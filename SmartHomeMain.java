@@ -65,23 +65,17 @@ class Device {
 class LightBulb extends Device {
     private int brightnessLevel;
     private String color;
-    private int savedBrightness;
-    private String savedColor;
 
     public LightBulb(String deviceName, String status, String location, int brightnessLevel, String color) {
         super(deviceName, status, location);
         this.brightnessLevel = brightnessLevel;
         this.color = color;
-        this.savedBrightness = brightnessLevel;
-        this.savedColor = color;
     }
 
     public LightBulb(String deviceName, String location) {
         super(deviceName, "OFF", location);
         this.brightnessLevel = 50;
         this.color = "Warm White";
-        this.savedBrightness = 50;
-        this.savedColor = "Warm White";
     }
 
     public void adjustBrightness(int level) {
@@ -94,8 +88,6 @@ class LightBulb extends Device {
     @Override
     public void turnOff() {
         super.turnOff();
-        savedBrightness = brightnessLevel;
-        savedColor = color;
         brightnessLevel = 0;
         color = "No Light";
     }
@@ -103,8 +95,8 @@ class LightBulb extends Device {
     @Override
     public void turnOn() {
         super.turnOn();
-        brightnessLevel = savedBrightness;
-        color = savedColor;
+        brightnessLevel = 50;      
+        color = "Warm White";      
     }
 
     @Override
@@ -160,9 +152,9 @@ class Thermostat extends Device {
 }
 
 class SmartHomeController {
-    private LightBulb bulb;
-    private Thermostat thermo1;
-    private Thermostat thermo2;
+    LightBulb bulb;
+    Thermostat thermo1;
+    Thermostat thermo2;
 
     public SmartHomeController(LightBulb bulb, Thermostat thermo1, Thermostat thermo2) {
         this.bulb = bulb;
