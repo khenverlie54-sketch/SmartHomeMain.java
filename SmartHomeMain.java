@@ -44,7 +44,7 @@ class Device {
     public Device(String deviceName, String status, String location) {
         this.deviceName = deviceName;
       
-        if (status.equalsIgnoreCase("ON") || status.equalsIgnoreCase("OFF")) {
+        if (status.equalsIgnoreCase("ON")) {
             this.status = status.toUpperCase();
         } else {
             this.status = "OFF";
