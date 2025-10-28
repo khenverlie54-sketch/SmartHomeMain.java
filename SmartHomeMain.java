@@ -7,7 +7,7 @@ public class SmartHomeMain {
         Device[] devices = { bulb1, thermo1, thermo2 };
 
         System.out.println("\n_______________________________________");
-        System.out.println("       Initial Device Status        ");
+        System.out.println("       Initial Device Status         ");
         System.out.println("_______________________________________");
         for (Device d : devices) d.displayInfo();
         Device.showDeviceCount();
